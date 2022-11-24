@@ -1,13 +1,44 @@
+import 'dart:io';
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 
-class ProductsPage extends StatelessWidget {
+// ignore: must_be_immutable
+class ProductsPage extends StatefulWidget {
+  const ProductsPage({super.key});
 
+  @override
+  State<ProductsPage> createState() => _ProductsPageState();
+}
+
+class _ProductsPageState extends State<ProductsPage> {
   TextEditingController productPriceController = TextEditingController();
+
   TextEditingController urlController = TextEditingController();
+
   TextEditingController passwordController = TextEditingController();
+
   TextEditingController productImageController = TextEditingController();
+
   TextEditingController dobController = TextEditingController();
+
   TextEditingController addressController = TextEditingController();
+
+  final ImagePicker imagePicker = ImagePicker();
+
+  File? image;
+
+  Future pickImage() async {
+    try {
+      final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+      if (image == null) return;
+      setState(() => this.image = File(image.path));
+    } on PlatformException catch (e) {
+      // ignore: avoid_print
+      print('Failed to pick image: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,16 +66,6 @@ class ProductsPage extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(10),
               child: TextField(
-                controller: productImageController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Product Image',
-                ),
-              ),
-            ),
-            Container(
-              padding: const EdgeInsets.all(10),
-              child: TextField(
                 controller: productPriceController,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
@@ -62,29 +83,54 @@ class ProductsPage extends StatelessWidget {
                 ),
               ),
             ),
-            TextButton(
-              onPressed: () {
-                //forgot password screen
-              },
-              child: const Text(' ',),
+            const SizedBox(
+              height: 10,
             ),
             Container(
                 height: 50,
                 padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                 child: ElevatedButton(
                   style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(Colors.green[700])
+                      backgroundColor:
+                          MaterialStateProperty.all(Colors.green[700])),
+                  child: const Text('Add  Image'),
+                  onPressed: () {
+                    pickImage();
+                  },
+                )),
+            const SizedBox(
+              height: 10,
+            ),
+            image == null
+                ? const SizedBox(
+                    height: 10,
+                  )
+                : Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10.0),
+                      child: Image.file(
+                        image!,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
                   ),
+            Container(
+                height: 50,
+                padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                child: ElevatedButton(
+                  style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all(Colors.green[700])),
                   child: const Text('Add New Product'),
                   onPressed: () {
+                    // ignore: avoid_print
                     print(productPriceController.text);
+                    // ignore: avoid_print
                     print(passwordController.text);
                   },
-                )
-            ),
+                )),
           ],
         ));
   }
 }
-
-

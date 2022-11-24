@@ -1,13 +1,43 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 
-class EmployeesPage extends StatelessWidget {
+// ignore: must_be_immutable
+class EmployeesPage extends StatefulWidget {
+  const EmployeesPage({super.key});
 
+  @override
+  State<EmployeesPage> createState() => _EmployeesPageState();
+}
+
+class _EmployeesPageState extends State<EmployeesPage> {
   TextEditingController firstNameController = TextEditingController();
+
   TextEditingController lastNameController = TextEditingController();
+
   TextEditingController passwordController = TextEditingController();
+
   TextEditingController employeeIDController = TextEditingController();
+
   TextEditingController dobController = TextEditingController();
+
   TextEditingController addressController = TextEditingController();
+
+  String _date = "Not set";
+
+  DateTime selectedDate = DateTime.now();
+
+  // Future<void> _selectDate(BuildContext context) async {
+  //   final DateTime? picked = await showDatePicker(
+  //       context: context,
+  //       initialDate: selectedDate,
+  //       firstDate: DateTime(2015, 8),
+  //       lastDate: DateTime(2101));
+  //   if (picked != null && picked != selectedDate) {
+  //     setState(() {
+  //       selectedDate = picked;
+  //     });
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -62,15 +92,68 @@ class EmployeesPage extends StatelessWidget {
                 ),
               ),
             ),
-            Container(
-              padding: const EdgeInsets.all(10),
-              child: TextField(
-                controller: dobController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Date of Birth',
+            const SizedBox(
+              height: 2,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                ),
+                onPressed: () {
+                  DatePicker.showDatePicker(context,
+                      theme: const DatePickerTheme(
+                        containerHeight: 210.0,
+                      ),
+                      showTitleActions: true,
+                      minTime: DateTime(1950, 1, 1),
+                      maxTime: DateTime.now(), onConfirm: (date) {
+                    print('confirm $date');
+                    _date = '${date.year} - ${date.month} - ${date.day}';
+                    setState(() {});
+                  }, currentTime: DateTime.now(), locale: LocaleType.en);
+                },
+                child: Container(
+                  alignment: Alignment.center,
+                  height: 60.0,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Row(
+                        children: <Widget>[
+                          Row(
+                            children: <Widget>[
+                              const Icon(
+                                Icons.date_range,
+                                size: 18.0,
+                                color: Colors.green,
+                              ),
+                              Text(
+                                " $_date",
+                                style: const TextStyle(
+                                    color: Colors.green,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18.0),
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                      const Text(
+                        "Date of Birth",
+                        style: TextStyle(
+                            color: Colors.green,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18.0),
+                      ),
+                    ],
+                  ),
                 ),
               ),
+            ),
+            const SizedBox(
+              height: 2,
             ),
             Container(
               padding: const EdgeInsets.all(10),
@@ -93,29 +176,23 @@ class EmployeesPage extends StatelessWidget {
                 ),
               ),
             ),
-            TextButton(
-              onPressed: () {
-                //forgot password screen
-              },
-              child: const Text(' ',),
+            const SizedBox(
+              height: 15,
             ),
             Container(
                 height: 50,
                 padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                 child: ElevatedButton(
                   style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(Colors.green[700])
-                  ),
+                      backgroundColor:
+                          MaterialStateProperty.all(Colors.green[700])),
                   child: const Text('Register New Employee'),
                   onPressed: () {
-                    print(firstNameController.text);
-                    print(passwordController.text);
+                    // print(firstNameController.text);
+                    // print(passwordController.text);
                   },
-                )
-            ),
+                )),
           ],
         ));
   }
 }
-
-
