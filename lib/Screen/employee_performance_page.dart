@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
-import 'dart:math' as math;
 import 'package:sliver_bar_chart/sliver_bar_chart.dart';
 
-class EmployeeChart extends StatefulWidget {
-  const EmployeeChart({super.key});
-
+class EmployeePerformance extends StatefulWidget {
+  static const routeName = '/employeePerformance';
+  const EmployeePerformance({super.key});
   @override
-  State<EmployeeChart> createState() => _EmployeeChartState();
+  State<EmployeePerformance> createState() => _EmployeePerformanceState();
 }
 
-class _EmployeeChartState extends State<EmployeeChart>
+class _EmployeePerformanceState extends State<EmployeePerformance>
     with TickerProviderStateMixin {
   final ScrollController _scrollController = ScrollController();
   late final List<BarChartData> _barValues;

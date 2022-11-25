@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_first_app/employee_barchart.dart';
-import 'package:flutter_first_app/main.dart';
+import 'employee_performance_page.dart';
+import 'home_page.dart';
 
 // ignore: must_be_immutable
 class LoginPage extends StatelessWidget {
@@ -63,7 +63,7 @@ class LoginPage extends StatelessWidget {
                 } else {
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: (BuildContext context) =>
-                          const EmployeeChart()));
+                          const EmployeePerformance()));
                 }
               },
             )),
