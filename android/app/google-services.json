@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "272525909664",
+    "project_id": "employee-management-syst-a89a1",
+    "storage_bucket": "employee-management-syst-a89a1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:272525909664:android:295abd81a9b918b33cb3c5",
+        "android_client_info": {
+          "package_name": "com.shazaibsarwar.flutter_first_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "272525909664-o9cb560vs17k64r5er4b5ubgqvogt4dg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAfQpem0IXpjPVBDXYzbcnl97VQvThaN_4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "272525909664-o9cb560vs17k64r5er4b5ubgqvogt4dg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

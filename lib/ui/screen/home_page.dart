@@ -14,7 +14,7 @@ class HomePage extends StatelessWidget {
       body: const Center(
         child: Text("Home Page"),
       ),
-      drawer: const MyHeaderDrawer(),
+      drawer: MyHeaderDrawer(),
     );
   }
 }

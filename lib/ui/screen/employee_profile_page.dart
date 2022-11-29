@@ -1,12 +1,16 @@
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_first_app/core/models/product_model.dart';
 import 'package:intl/intl.dart';
+import '../../core/models/employee_model.dart';
+import '../../core/services/firestore_helper.dart';
 import '../widgets/drawer_header.dart';
 
+// ignore: must_be_immutable
 class EmployeeProfile extends StatefulWidget {
   static const routeName = '/employeeProfile';
-
-  const EmployeeProfile({super.key});
+  final Employee employee;
+  const EmployeeProfile({super.key, required this.employee});
 
   @override
   State<EmployeeProfile> createState() => _EmployeeProfileState();
@@ -14,7 +18,7 @@ class EmployeeProfile extends StatefulWidget {
 
 class _EmployeeProfileState extends State<EmployeeProfile> {
   DateTime selectedDate = DateTime.now();
-
+  String dropdownvalue = 'Item 1';
   TextEditingController dateinput = TextEditingController();
   @override
   void initState() {
@@ -46,35 +50,40 @@ class _EmployeeProfileState extends State<EmployeeProfile> {
                 child: Column(children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: const [Text("Employee ID"), Text("F2018065117")],
+                    children: [
+                      const Text("First Name"),
+                      Text(widget.employee.firstName)
+                    ],
                   ),
                   const SizedBox(
                     height: 10,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: const [Text("First Name"), Text("Ahmad")],
+                    children: [
+                      const Text("Last  Name"),
+                      Text(widget.employee.lastName)
+                    ],
                   ),
                   const SizedBox(
                     height: 10,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: const [Text("Last  Name"), Text("Raza")],
+                    children: [
+                      const Text("Date of Birth"),
+                      Text(widget.employee.dob)
+                    ],
                   ),
                   const SizedBox(
                     height: 10,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: const [Text("Date of Birth"), Text("17/08/1998")],
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: const [Text("Address"), Text("Lahore Pakistan")],
+                    children: [
+                      const Text("Address"),
+                      Text(widget.employee.address)
+                    ],
                   ),
                 ]),
               ),
@@ -93,37 +102,61 @@ class _EmployeeProfileState extends State<EmployeeProfile> {
               padding: const EdgeInsets.all(8.0),
               child: Column(
                 children: [
-                  DropdownSearch<String>(
-                    items: const [
-                      "Book",
-                      "Pen",
-                      "Laptop",
-                      "Coomputer",
-                      "Book",
-                      "Pen",
-                      "Laptop",
-                      "Coomputer"
-                    ],
-                    dropdownDecoratorProps: const DropDownDecoratorProps(
-                      dropdownSearchDecoration: InputDecoration(
-                        labelText: "Please Select Product",
-                        hintText: "Select an Int",
-                      ),
-                    ),
-                    popupProps: const PopupProps.bottomSheet(
-                        constraints: BoxConstraints(maxHeight: 300),
-                        showSearchBox: true,
-                        bottomSheetProps: BottomSheetProps(
-                          elevation: 16,
-                          backgroundColor: Colors.white,
-                        )),
-                  ),
+                  StreamBuilder<List<Product>>(
+                      stream: FirestoreHelper.readProduct(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
+                        if (snapshot.hasError) {
+                          return const Center(
+                            child: Text("some error occured"),
+                          );
+                        }
+                        if (snapshot.hasData) {
+                          final userData = snapshot.data;
+
+                          var productName = userData!.map((product) {
+                            return product.name.toString();
+                          }).toList();
+
+                          return DropdownSearch<String>(
+                            items: productName,
+                            dropdownDecoratorProps:
+                                const DropDownDecoratorProps(
+                              dropdownSearchDecoration: InputDecoration(
+                                labelText: "Please Select Product",
+                              ),
+                            ),
+                            onSaved: (String? newValue) {
+                              setState(() {
+                                dropdownvalue = newValue!;
+                              });
+                            },
+                            popupProps: const PopupProps.bottomSheet(
+                                constraints: BoxConstraints(maxHeight: 300),
+                                showSearchBox: true,
+                                bottomSheetProps: BottomSheetProps(
+                                  elevation: 16,
+                                  backgroundColor: Colors.white,
+                                )),
+                          );
+                        }
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }),
                   const SizedBox(
                     height: 15,
                   ),
-                  TextField(
+                  TextFormField(
                     cursorColor: Colors.green,
                     controller: dateinput,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    validator: (value) => value == null ? "Enter Date" : null,
                     decoration: const InputDecoration(
                         icon: Icon(
                           Icons.calendar_today,
@@ -186,10 +219,7 @@ class _EmployeeProfileState extends State<EmployeeProfile> {
                             backgroundColor:
                                 MaterialStateProperty.all(Colors.green[700])),
                         child: const Text('Assign'),
-                        onPressed: () {
-                          // print(firstNameController.text);
-                          // print(passwordController.text);
-                        },
+                        onPressed: () {},
                       )),
                 ],
               ),
@@ -197,7 +227,7 @@ class _EmployeeProfileState extends State<EmployeeProfile> {
           ),
         )
       ]),
-      drawer: const MyHeaderDrawer(),
+      drawer: MyHeaderDrawer(),
     );
   }
 }
