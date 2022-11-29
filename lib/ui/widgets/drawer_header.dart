@@ -1,11 +1,14 @@
+// ignore_for_file: prefer_typing_uninitialized_variables
 import 'package:flutter/material.dart';
-import 'package:flutter_first_app/Screen/employee_list_page.dart';
-import 'package:flutter_first_app/Screen/home_page.dart';
-import 'package:flutter_first_app/Screen/login_page.dart';
-import 'package:flutter_first_app/Screen/products_register.dart';
-import '../Screen/employees_register_page.dart';
+import 'package:flutter_first_app/ui/screen/employee_list_page.dart';
+import 'package:flutter_first_app/ui/screen/home_page.dart';
+import 'package:flutter_first_app/ui/screen/products_register.dart';
+import '../../core/auth/authentication.dart';
+import '../screen/employees_register_page.dart';
 
+// ignore: must_be_immutable
 class MyHeaderDrawer extends StatelessWidget {
+  var size, height, width;
   Widget buildListTile(String title, IconData icon, VoidCallback tapHandler) {
     return ListTile(
       leading: Icon(
@@ -23,17 +26,21 @@ class MyHeaderDrawer extends StatelessWidget {
     );
   }
 
-  const MyHeaderDrawer({super.key});
+  MyHeaderDrawer({super.key});
 
   @override
   Widget build(BuildContext context) {
+    // getting the size of the window
+    size = MediaQuery.of(context).size;
+    height = size.height;
+    width = size.width;
     return Drawer(
       width: 185,
       child: Column(
         children: [
           Container(
-            height: 120,
-            width: 300,
+            height: height * 0.3,
+            width: width * 0.6,
             padding: const EdgeInsets.all(20),
             alignment: Alignment.centerLeft,
             color: Colors.green,
@@ -45,8 +52,8 @@ class MyHeaderDrawer extends StatelessWidget {
                   color: Colors.white),
             ),
           ),
-          const SizedBox(
-            height: 20,
+          SizedBox(
+            height: height * 0.02,
           ),
           buildListTile('Home', Icons.home, () {
             Navigator.of(context).pushReplacementNamed(HomePage.routeName);
@@ -62,8 +69,7 @@ class MyHeaderDrawer extends StatelessWidget {
             Navigator.of(context).pushReplacementNamed(ProductsPage.routeName);
           }),
           buildListTile('Logout', Icons.logout, () {
-            Navigator.of(context)
-                .push(MaterialPageRoute(builder: (context) => LoginPage()));
+            AuthenticationHelper().signOut(context);
           }),
         ],
       ),
